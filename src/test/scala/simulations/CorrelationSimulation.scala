@@ -5,8 +5,6 @@ import io.gatling.core.structure.ScenarioBuilder
 import io.gatling.http.Predef._
 import io.gatling.http.protocol.HttpProtocolBuilder
 
-import scala.concurrent.duration.DurationInt
-
 class CorrelationSimulation extends Simulation {
 
   //1. HTTP Configuration
@@ -15,7 +13,7 @@ class CorrelationSimulation extends Simulation {
     .header("Accept", "application/json")
 
   //2. Scenario Definition
-  val scn: ScenarioBuilder = scenario("Second Scenario")
+  val scn: ScenarioBuilder = scenario("Third Scenario")
 
     // First, Check the title of the first post
     .exec(http("Get Specific Post")
