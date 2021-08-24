@@ -8,7 +8,7 @@ import io.gatling.http.protocol.HttpProtocolBuilder
 import scala.concurrent.duration._
 import scala.language.postfixOps
 
-class FixedDurationLoadSimulation extends Simulation {
+class AssertionsSimulation extends Simulation {
 
   //1. HTTP Configuration
   val httpProtocol: HttpProtocolBuilder = http
@@ -33,21 +33,20 @@ class FixedDurationLoadSimulation extends Simulation {
   }
 
   //3. Scenario Definition
-  val scn: ScenarioBuilder = scenario("Ninth Scenario")
-    .forever() {
-      exec(getAllComments)
-        .pause(5)
-        .exec(getAllPosts)
-        .pause(5)
-        .exec(getAllComments)
-    }
+  val scn: ScenarioBuilder = scenario("Tenth Scenario")
+    .exec(getAllPosts)
+    .pause(5)
+    .exec(getAllComments)
 
   //4. Load Scenario
   setUp(
     scn.inject(
       nothingFor(5 seconds),
       atOnceUsers(10),
-      rampUsers(50) during (30 seconds)))
+      rampUsers(5) during (5 seconds)))
     .protocols(httpProtocol)
-    .maxDuration(1 minute)
+    .assertions(
+      global.responseTime.max.lt(500),
+      global.successfulRequests.percent.gt(95)
+    )
 }
